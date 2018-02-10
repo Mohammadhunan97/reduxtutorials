@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+
+
+    <script type="text/babel">
+const createStore = Redux.createStore;
+const counter = (state = 0, action) => {
+  switch(action.type){
+    case 'INCREMENT':
+      return state +1;
+    case 'DECREMENT':
+      return state -1;
+    default:
+      return state;
+  }
+}
+
+let store = createStore(counter);
+
+// Components
+let App = React.createClass({
+	render: () => {
+		return (<div> 
+			<h1>Counter App</h1>
+			<hr/>
+		<h1>{store.getState()}</h1>
+		<button onClick={() => store.dispatch({type: 'INCREMENT'})}>UP</button>
+		<button onClick={() => store.dispatch({type: 'DECREMENT'})}> DOWN</button>
+			</div>)
+	}
+})
+
+const render = () => {
+	ReactDOM.render(<App />, document.getElementById('app'));
+}
+store.subscribe(render);
+render();
+    </script>
+
+
+
+
+  </body>
+</html>
