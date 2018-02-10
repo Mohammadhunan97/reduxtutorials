@@ -25,7 +25,19 @@ const counter = (state = 0, action) => {
 
 let store = createStore(counter);
 
+
 // Components
+const Counter = ({ value, increment, decrement}) => (
+  <div>
+  <h1> Value: {value}</h1>
+    <button onClick={() => store.dispatch({type: 'INCREMENT'})}>+</button>
+    <button onClick={() => store.dispatch({type: 'DECREMENT'})}>-</button>
+  </div>
+)
+
+
+
+
 let App = React.createClass({
 	render: () => {
 		return (<div> 
@@ -34,6 +46,12 @@ let App = React.createClass({
 		<h1>{store.getState()}</h1>
 		<button onClick={() => store.dispatch({type: 'INCREMENT'})}>UP</button>
 		<button onClick={() => store.dispatch({type: 'DECREMENT'})}> DOWN</button>
+    <Counter 
+    value={store.getState()}
+    increment={() => store.dispatch({type: 'INCREMENT'})}
+    decrement={() => store.dispatch({type: 'DECREMENT'})}
+
+     />
 			</div>)
 	}
 })
