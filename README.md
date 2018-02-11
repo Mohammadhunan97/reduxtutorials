@@ -14,3 +14,18 @@ code I created based off the getting started with redux series from the official
 		[COUNTER REPO](./REDUXCOUNTER)
 		<br/>
 		[SEE DEMO IN BROWSER](https://s3.amazonaws.com/reduxsamples/index.html)
+
+
+
+## Using Redux Quick CheckList:
+    1. declare createStore
+    2. create reducer method
+    3. let store = createStore(reducer)
+    4. create component
+    5. create render method and store.subscribe to the render method. 
+    6. call the render method
+      const render = () => {
+        ReactDOM.render(<App />, document.getElementById('app'));
+      }
+      store.subscribe(render);
+      render();
