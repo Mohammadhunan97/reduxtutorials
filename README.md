@@ -13,7 +13,10 @@ code I created based off the getting started with redux series from the official
 	* Counter Application:
 		[COUNTER REPO](./REDUXCOUNTER)
 		<br/>
-		[SEE DEMO IN BROWSER](https://s3.amazonaws.com/reduxsamples/index.html)
+		[SEE DEMO IN BROWSER](https://s3.amazonaws.com/reduxsamples/counter.html)
+	* REDUX TODO 1 (project I created without the documentation videos as a guide):
+		[COUNTER REPO](./REDUXTODO1)
+		[SEE DEMO IN BROWSER](https://s3.amazonaws.com/reduxsamples/todo1.html)
 
 
 
@@ -21,7 +24,7 @@ code I created based off the getting started with redux series from the official
     1. declare createStore
     2. create reducer method
     3. let store = createStore(reducer)
-    4. create component
+    4. create component with ability to dispatch events
     5. create render method and store.subscribe to the render method. 
     6. call the render method
       const render = () => {
