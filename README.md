@@ -11,12 +11,15 @@ code I created based off the getting started with redux series from the official
 ## LINKS: 
 
 	* Counter Application:
-		[COUNTER REPO](./REDUXCOUNTER)
+[COUNTER REPO](./REDUXCOUNTER)
 		<br/>
-		[SEE DEMO IN BROWSER](https://s3.amazonaws.com/reduxsamples/counter.html)
+[SEE DEMO IN BROWSER](https://s3.amazonaws.com/reduxsamples/counter.html)
+
+
 	* REDUX TODO 1 (project I created without the documentation videos as a guide):
-		[COUNTER REPO](./REDUXTODO1)
-		[SEE DEMO IN BROWSER](https://s3.amazonaws.com/reduxsamples/todo1.html)
+[TODO 1 REPO](./REDUXTODO1)
+<br/>
+[SEE DEMO IN BROWSER](https://s3.amazonaws.com/reduxsamples/todo1.html)
 
 
 
