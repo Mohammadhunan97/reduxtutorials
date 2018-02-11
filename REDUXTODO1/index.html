@@ -50,12 +50,13 @@ class Readlist extends React.Component {
 
 class Additem extends React.Component {
   submitItem(){
+  console.log(this)
     store.dispatch({type: 'ADD-ITEM', item: this.textInput.value })
     this.textInput.value = "";
   }
   render(){
     return(<div id="Additem">
-      <input ref="textInput" onClick={(e) => this.textInput = e.target} />
+      <input ref={(input) => { this.textInput = input; }} />
       <button onClick={() => this.submitItem()}>click me</button>
     </div>
     )
