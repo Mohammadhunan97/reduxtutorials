@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+
+  <script type="text/babel">
+  let createStore = Redux.createStore;
+
+  const Todo = (state = [], action) => {
+    switch(action.type) {
+      case 'ADD-ITEM':
+        console.log('item you wish to add:',action.item);
+        return state.concat([action.item]);
+      case 'REMOVE-ITEM':
+        let removableitem = action.item;
+        let arr = [];
+        for (let i = 0; i<= state.length -1; i++) {
+          if(state[i] !== removableitem){
+            arr.push(state[i]);
+          }
+        }
+        return arr;
+      default:
+        return state;
+    }
+  }
+
+let store = createStore(Todo);
+
+class Readlist extends React.Component {
+  render(){
+      let List = () => {
+      let items = [];
+      store.getState().map((text,i) => {
+        items.push(<div key={'readlist-div-' + i}>
+        <li key={'readlist-li-' + i}>{text}</li>
+        <button key={'readlist-button-' + i} onClick={() => store.dispatch({type: 'REMOVE-ITEM', item: text })}>delete</button></div>)
+      })
+      return items;
+    }
+    return(<ul id="List">{List()}</ul>)
+  }
+}
+
+class Additem extends React.Component {
+  render(){
+    return(<div id="Additem">
+      <input ref="textInput" onClick={(e) => this.textInput = e.target} />
+      <button onClick={() => store.dispatch({type: 'ADD-ITEM', item: this.textInput.value})}>click me</button>
+    </div>
+    )
+  }
+}
+
+
+class App extends React.Component {
+  render(){
+    return(<div id="App">
+      <h1>Todo List</h1>
+      <hr />
+      <Additem />
+      <br />
+      <Readlist />
+    </div>)
+  }
+}
+
+
+let render = () => {
+  ReactDOM.render(<App />, document.getElementById('app'));  
+  console.log(store.getState());
+}
+
+store.subscribe(render);
+render();
+
+
+  </script>
+
+
+
+
+  </body>
+</html>
