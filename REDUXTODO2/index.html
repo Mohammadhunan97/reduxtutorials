@@ -96,16 +96,18 @@ class App extends React.Component {
   }
 }
 class Createtask extends React.Component {
+  submitNewTask(){
+    store.dispatch({
+      type: 'ADD_TODO',
+      id: store.getState().todos.length,
+      text: this.textInput.value
+    })
+    this.textInput.value = "";
+  }
   render(){
     return(<div id="create-task">
       <input ref={(input) => { this.textInput = input; }} />
-      <button onClick={() => {
-        store.dispatch({
-          type: 'ADD_TODO',
-          id: store.getState().todos.length,
-          text: this.textInput.value
-        })
-      }}>submit</button>
+      <button onClick={() => this.submitNewTask()}>submit</button>
     </div>)
   }
 }
