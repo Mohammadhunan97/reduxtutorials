@@ -1,16 +1,8 @@
 const assert = require('chai').assert,
- deepFreeze  = require('deep-freeze');
+ deepFreeze  = require('deep-freeze'),
+ redux		 = require('redux');
 
-let todoReducter = (state = [], action) => {
-    switch(action.type){
-      case 'ADD_TODO':
-       return addTodo(state,action);
-      case 'TOGGLE_TODO':
-       return toggleTodo(state,action);
-      default:
-        return state;
-    }
-  }
+let combineReducers = redux.combineReducers;
 
 
 const addTodo = (state, action) => {
@@ -36,57 +28,172 @@ const toggleTodo = (state, action) => {
           }
         })
 }
-describe('To Do List App', () =>{
-	describe('todo reducter', () => {
-		it('IF ACTION.TYPE = ADD_TODO, new state = old state + action', () => {
-			let stateBefore = []; 
-			let theAction = {
-				type: 'ADD_TODO',
-				id: 0,
-				text: 'hello world'
-			}
-			let stateAfter = [{
-				id: 0,
-				text: 'hello world',
-				completed: false
-			}];
-			deepFreeze(stateBefore);
-			deepFreeze(theAction);
 
-			let result = todoReducter([], theAction);
-			assert.deepEqual(result, stateAfter); //compares objects data rather than comparing that they are the same exact object (.deepEqual should only be used with arrays and objects).
-		})
+let todos = (state = [], action) => {
+    switch(action.type){
+      case 'ADD_TODO':
+       return addTodo(state,action);
+      case 'TOGGLE_TODO':
+       return toggleTodo(state,action);
+      default:
+        return state;
+    }
+  }
 
-		it('IF ACTION.TYPE = TOGGLE_TODO, new state = old state, but item with action.id should toggle its item.completed', () => {
-			let stateBefore = [{
-				id: 0,
-				text: 'buy a fish',
-				completed: false
-			},
-			{
-				id: 1,
-				text: 'go jogging',
-				completed: false
-			}];
-			let theAction = {
-				type: 'TOGGLE_TODO',
-				id: 1
-			}
-			let stateAfter = [{
-				id: 0,
-				text: 'buy a fish',
-				completed: false
-			},
-			{
-				id: 1,
-				text: 'go jogging',
-				completed: true
-			}];
-			deepFreeze(stateBefore);
-			deepFreeze(theAction);
-			let result = todoReducter(stateBefore, theAction);
-			assert.deepEqual(result,stateAfter);
-		})
+const visibilityFilter = (state = 'SHOW_ALL', action) => {
+  switch(action.type){
+    case 'SET_VISIBILITY_FILTER':
+      return action.filter;
+    default:
+      return state;
+  }
+}
+
+
+let todoApp = combineReducers({ todos, visibilityFilter});
+
+
+
+
+describe('todoApp add a single todo', () => {
+	it('new state = a copy of old state + action when state has not been altered', () =>{
+		let oldState = { todos: [], visibilityFilter: 'SHOW_ALL' };
+		let action = {
+			type: 'ADD_TODO',
+			id: 0,
+			text: 'first item in list'
+		}
+		let expectedState = {
+			"todos": [{
+				"id": 0,
+				"text": "first item in list",
+				"completed":false
+			}],
+			"visibilityFilter": "SHOW_ALL"
+		}
+
+		deepFreeze(oldState);
+		deepFreeze(action);
+
+		let result = todoApp(oldState, action);
+		assert.deepEqual(result, expectedState);
 	})
-})
 
+  it('new state = a copy of old state + action when state has been altered', () => {
+    let oldState = {
+      "todos": [{
+        "id": 0,
+        "text": "first item in list",
+        "completed":false
+      }],
+      "visibilityFilter": "SHOW_ALL"
+    };
+    let action = {
+      type: 'ADD_TODO',
+      id: 1,
+      text: 'second item in list'
+    };
+    let expectedState = {
+      "todos": [{
+        "id": 0,
+        "text": "first item in list",
+        "completed":false
+      },
+      {
+      id: 1,
+      text: 'second item in list',
+      "completed":false
+    }],
+      "visibilityFilter": "SHOW_ALL"
+    };
+    deepFreeze(oldState);
+    deepFreeze(action);
+
+    let result = todoApp(oldState, action);
+    assert.deepEqual(result, expectedState);
+
+  }) //end of it
+}) //end of describe
+
+
+describe('todoApp toggles todo', () => {
+  it('when completed is toggled, state remains the same but completed is changed from true to false or vice versa', () => {
+    let oldState = {
+      "todos": [{
+        "id": 0,
+        "text": "first item in list",
+        "completed":false
+      },
+      {
+      id: 1,
+      text: 'second item in list',
+      "completed":false
+    }],
+      "visibilityFilter": "SHOW_ALL"
+    };
+    let action = {
+      type: 'TOGGLE_TODO',
+      id: 1
+    };
+    let expectedState = {
+      "todos": [{
+        "id": 0,
+        "text": "first item in list",
+        "completed":false
+      },
+      {
+      id: 1,
+      text: 'second item in list',
+      "completed":true
+    }],
+      "visibilityFilter": "SHOW_ALL"
+    };
+    deepFreeze(oldState);
+    deepFreeze(action);
+
+    let result = todoApp(oldState, action);
+    assert.deepEqual(result, expectedState);
+
+  });// end of it
+});// end of describe
+
+describe('todoApp changes visibility filter', () => {
+  it('when visibilityFilter is changed from SHOW_ALL to SHOW_COMPLETED, the rest of the state is unchanged', () => {
+    let oldState = {
+      "todos": [{
+        "id": 0,
+        "text": "first item in list",
+        "completed":false
+      },
+      {
+      id: 1,
+      text: 'second item in list',
+      "completed":true
+    }],
+      "visibilityFilter": "SHOW_ALL"
+    };
+    let action = {
+      type: 'SET_VISIBILITY_FILTER',
+      filter: 'SHOW_COMPLETED'
+    }
+    let expectedState = {
+      "todos": [{
+        "id": 0,
+        "text": "first item in list",
+        "completed":false
+      },
+      {
+      id: 1,
+      text: 'second item in list',
+      "completed":true
+    }],
+      "visibilityFilter": "SHOW_COMPLETED"
+    };
+    deepFreeze(oldState);
+    deepFreeze(action);
+
+    let result = todoApp(oldState, action);
+    assert.deepEqual(result, expectedState);
+
+  }); //end of it
+});//end of describe

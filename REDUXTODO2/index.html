@@ -1,28 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>To Do App</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/5.0.0/mocha.js"></script>
+    <style>
+      a{
+        margin: 10px;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>
 
   <script type="text/babel">
 let createStore = Redux.createStore;
-let todos = (state = [], action) => {
-    switch(action.type){
-      case 'ADD_TODO':
-       return addTodo(state,action);
-      case 'TOGGLE_TODO':
-       return toggleTodo(state,action);
-      default:
-        return state;
-    }
-  }
-
+let combineReducers = Redux.combineReducers;
 
 const addTodo = (state, action) => {
    return [
@@ -48,6 +44,17 @@ const toggleTodo = (state, action) => {
         })
 }
 
+let todos = (state = [], action) => {
+    switch(action.type){
+      case 'ADD_TODO':
+       return addTodo(state,action);
+      case 'TOGGLE_TODO':
+       return toggleTodo(state,action);
+      default:
+        return state;
+    }
+  }
+
 const visibilityFilter = (state = 'SHOW_ALL', action) => {
   switch(action.type){
     case 'SET_VISIBILITY_FILTER':
@@ -57,13 +64,103 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
   }
 }
 
-
-const todoApp = (state = {}, action) => {
-  return {
-    todos: todos(state.todos, action),
-    visibilityFilter: visibilityFilter(state.visibilityFilter, action),
-  };
+const getVisibile = (todos,filter) => {
+  switch(filter){
+    case 'SHOW_ALL':
+      return todos;
+    case 'SHOW_ACTIVE':
+      return todos.filter(t => t.completed === false);
+    case 'SHOW_COMPLETED':
+      return todos.filter(t => t.completed === true);
+  }
 };
+
+let todoApp = combineReducers({ todos, visibilityFilter});
+let store = createStore(todoApp);
+
+class App extends React.Component {
+  render(){
+    return(<div id="App">
+      <input ref={(input) => { this.textInput = input; }} />
+      <button onClick={() => {
+        store.dispatch({
+          type: 'ADD_TODO',
+          id: store.getState().todos.length,
+          text: this.textInput.value
+        })
+      }}>submit</button>
+      <br/>
+      <hr/>
+      <Listfilter todos={store.getState().todos} />
+      <VisibilityFilterChanger />
+    </div>)
+  }
+}
+class Listfilter extends React.Component {
+  render(){
+  let filteredList = getVisibile(this.props.todos, store.getState().visibilityFilter);
+    return(<div id="filtered-list">
+      {filteredList.map(todo => 
+        <ListItem  todo={todo} />
+      )}
+    </div>)
+  }
+}
+
+class ListItem extends React.Component {
+  completeTask(){
+    store.dispatch({
+      type: 'TOGGLE_TODO',
+      id: this.props.todo.id
+    })
+  }
+  render(){
+    return(<li
+      id={'list-item-'+this.props.todo.id}
+      key={'list-item-'+this.props.todo.id}
+      onClick={()=> this.completeTask()}
+      style={{textDecoration: this.props.todo.completed? 'line-through':'none'}}
+    >{this.props.todo.text}</li>)
+  }
+}
+
+class VisibilityFilterChanger extends React.Component {
+  showAll(e){
+    e.preventDefault();
+    store.dispatch({
+      type: 'SET_VISIBILITY_FILTER',
+      filter: 'SHOW_ALL'
+    });
+  }
+  showActive(e){
+    e.preventDefault();
+      store.dispatch({
+      type: 'SET_VISIBILITY_FILTER',
+      filter: 'SHOW_ACTIVE'
+    });
+  }
+  showCompleted(e){
+    e.preventDefault();
+    store.dispatch({
+      type: 'SET_VISIBILITY_FILTER',
+      filter: 'SHOW_COMPLETED'
+    });
+  }
+  render(){
+    return(<div id="visibility-filter-changer">
+      <h3>Toggle Visibilty:</h3>
+      <a href="#" onClick={(e) => this.showAll(e)}>SHOW ALL</a>
+      <a href="#" onClick={(e) => this.showActive(e)}>SHOW ACTIVE</a>
+      <a href="#" onClick={(e) => this.showCompleted(e)}>SHOW COMPLETED</a>
+    </div>)
+  }
+}
+let render = () => {
+  ReactDOM.render(<App />, document.getElementById('app'));
+  console.log(store.getState());
+}
+store.subscribe(render);
+render();
 
   </script>
 
