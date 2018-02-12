@@ -1,28 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import PropTypes from 'prop-types';
 import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import App from './App';
 import Counter from './store/reducer';
+const store = createStore(Counter);
 
-
-let store = createStore(Counter);
-
-class Provider extends React.Component {
-  getChildContext() {
-    return {
-      store: store
-    };
-  }
-  render() {
-    return <div>{this.props.children}</div>;
-  }
-}
-
-
-Provider.childContextTypes = {
-  store: PropTypes.object
-};
 
 
 const render = () => {

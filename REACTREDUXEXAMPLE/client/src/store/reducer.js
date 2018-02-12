@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+//import { combineReducers } from 'redux';
 
 class Reducer {
 	counter(state = 0, action){
