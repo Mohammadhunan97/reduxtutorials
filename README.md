@@ -38,6 +38,7 @@ const render = () => {
 
 #### REDUX TODO 2 (project that was based on the documentation videos as a guide):
 [TODO 2 REPO](./REDUXTODO2)
+<br/>
 [SEE DEMO IN BROWSER](https://s3.amazonaws.com/reduxsamples/todo2.html)
 
 
