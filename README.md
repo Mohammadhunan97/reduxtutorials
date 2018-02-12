@@ -23,6 +23,10 @@ const render = () => {
       render();
 ```
 
+
+### More React or Redux Info:
+  1. React Provider, can be used to pass down a mandatory prop that every component needs (such as the Redux Store).
+
 ## LINKS: 
 
 #### Counter Application:
