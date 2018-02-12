@@ -11,6 +11,11 @@
       a{
         margin: 10px;
       }
+      .currentFilter{
+        color: black;
+        text-decoration: none;
+        cursor: default;
+      }
     </style>
   </head>
   <body>
@@ -149,9 +154,13 @@ class VisibilityFilterChanger extends React.Component {
   render(){
     return(<div id="visibility-filter-changer">
       <h3>Toggle Visibilty:</h3>
-      <a href="#" onClick={(e) => this.showAll(e)}>SHOW ALL</a>
-      <a href="#" onClick={(e) => this.showActive(e)}>SHOW ACTIVE</a>
-      <a href="#" onClick={(e) => this.showCompleted(e)}>SHOW COMPLETED</a>
+      <a href="#" onClick={(e) => this.showAll(e)} className={store.getState().visibilityFilter === 'SHOW_ALL'? 'currentFilter': 'potentialFilter'}>SHOW ALL</a>
+      <a href="#" onClick={(e) => this.showActive(e)}
+      className={store.getState().visibilityFilter === 'SHOW_ACTIVE'? 'currentFilter': 'potentialFilter'}
+      >SHOW ACTIVE</a>
+      <a href="#" onClick={(e) => this.showCompleted(e)}
+      className={store.getState().visibilityFilter === 'SHOW_COMPLETED'? 'currentFilter': 'potentialFilter'}
+      >SHOW COMPLETED</a>
     </div>)
   }
 }
