@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+/* import PropTypes from 'prop-types'; // only needed if you are not using react-redux package */
+import { connect } from 'react-redux';
 import Counter from './counter';
 
 
-
+       // <h1>Value: {store.getState()} </h1>
 
 
 class App extends Component {
-
   render() {
-    let store = this.context.store;
+    this.count = this.props.state;
     return (
       <div className="App">
-        <h1>Counter Value: {store.getState()}</h1>
+        {
+          /* 
+        only needed if you are not using react redux package
+          <h1>Value: {store.getState()} </h1> 
+          */
+        }
+        <h1>Value: {this.count}</h1>
         <Counter />
 
       </div>
@@ -20,10 +26,17 @@ class App extends Component {
   }
 }
 
-App.contextTypes = {
-  store: PropTypes.object
-};
+const count = state => {
+  return {state,}
+}
+
+export default connect(count)(App);
+
+/* only needed if you are not using react-redux package */
+// App.contextTypes = {
+//   store: PropTypes.object
+// };
 
 
-export default App;
+// export default App;
  

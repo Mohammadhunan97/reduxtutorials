@@ -12,7 +12,7 @@ const render = () => {
 	ReactDOM.render(<Provider store={store}>
 		<App />
 		</Provider>, document.getElementById('root'));
-	console.log(store.getState());
+	// console.log(store.getState());
 }
 
 store.subscribe(render);
